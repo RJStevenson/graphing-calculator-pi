@@ -79,12 +79,27 @@ class ops(object):  #checking for the signs +-/abs etc
             if k in ops().lreserv():
                   ssum = switch(k, ssum.index(k), ssum)
         return ssum
-sdata = input("enter your some")
-
-if sdata.capitalize() != "FRAC":
-    x = ops().numloop(sdata)
-    x = float(x)
-    x =Fraction(x).limit_denominator(10000000)
-    print((x))
-elif sdata.capitalize() == "FRAC":
-    print(float(x))
+t = True
+while t == True:
+    mem = open("mem.txt")
+    sfile = mem.read()
+    mem.close()
+    mem = open("mem.txt","r")
+    fline = mem.readline()
+    mem.close()
+    sdata = input("enter your some")
+    if sdata == "":
+        break
+    elif sdata.upper() == "EXIT":
+        t= False
+        break
+    elif (sdata.upper()) != "FRAC":
+            mem = open ("mem.txt","w")
+            x = ops().numloop(sdata)
+            x = float(x)
+            mem.write(str(x)+ "\n" + sfile)
+            print(str(x))
+    elif sdata.upper() == "FRAC":
+            x = float(fline)
+            x =Fraction(x).limit_denominator(10000000)
+            print((x))
