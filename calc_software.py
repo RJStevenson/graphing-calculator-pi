@@ -69,7 +69,7 @@ class ops(object):  #checking for the signs +-/abs etc
                     return [float(lnum), float(rnum)]
         else:
             if (check_str_contains_list(lnum, ops().lreserv()) == False) and (check_str_contains_list(rnum, ops().lreserv()) == False) and (check_str_contains_list(ssign, ops().lreserv()) == False):
-                return [str(lnum), str(rnum),float(ssign)]
+                return [float(lnum), float(rnum),float(ssign)]
             else:
                     if (check_str_contains_list(lnum, ops().lreserv()) == True):
                         lnum = ops().numloop(lnum)
@@ -112,8 +112,15 @@ class ops(object):  #checking for the signs +-/abs etc
         for k in ssum:
             if check_str_contains_list(ssum, ops().lreserv())==False:
                 break
-            if k in ops().lreserv():
-                  ssum = switch(k, ssum.index(k), ssum)
+            try:
+                ssum = float(ssum)
+                return ssum
+            except:
+                for k in ops().lreserv():
+                    try:
+                        ssum = switch(k, ssum.index(k), ssum)
+                    except:
+                        pass
         return ssum
 t = True
 while t == True:
