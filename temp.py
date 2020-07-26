@@ -1,50 +1,66 @@
 import math
-from fractions import Fraction
+from fractions import Fraction 
 class ops(object):
-    reg_operators = ["+","-", "/","*"]
-    op_count = [0,0,0,0]
-    operators = ["(",")","|"]
+    def find_nth(self, haystack, needle, n):
+        start = haystack.find(needle)
+        while start >= 0 and n > 1:
+            start = haystack.find(needle, start+len(needle))
+            n -= 1
+        return start
+    reg_operators = ["+","-", "/","*"] #regonized operators by the function eval
+    op_count = [0,0,0,0] #array to count the occurences of the operators the array below
+    operators = ["(",")","|"] #operators that program looks for
+    brac_occurence = []
+    '''
     def inop(self, ssum):
         bops = False
         for l in ssum:
-            if (l in operators == True):
+            if l == "(":
+                ops().op_count[0] = ops().op_count[0] +1
+            if l == ")":
+                ops().op_count[1] = ops().op_count[1] + 1
+            if (l in ops().operators == True):
                 bpos = True
-                break
-        if bpos == False:
+        if ops.op_count[0] != ops.op_count[1]:
+            return "incorrect brackets"
+        elif bpos == False:
             ssum = eval(ssum)
             return ssum
         else: 
+            ops.op_count[0] = 0
             ssum = numloop(ssum)
+            return ssum
+    '''
+
     def numloop(self, ssum):
         str(ssum)
-        stemp =""
-        ipos1 = -1
-        ipos2= -1
-        ibrac = -1
         for k in ssum:
-            if k =="(":
-                if ssum.index(k) != 0:
-                    ibrac = ssum.index(k) -1
-
-                    if ssum[ibrac] not in ops.reg_operators:
-                     ssum = ssum[0:ibrac +1] + "*" + ssum[ibrac +1:len(ssum)]
-
-                if ipos1 ==-1:
-                    ipos1 == ssum.index(k)
+            if k == "(":
                 ops.op_count[0] = ops.op_count[0] +1
-            if k ==")":
-                if ssum.index(k) != len(ssum)-1:
-                    ibrac = ssum.index(k) + 1
-                    if ssum[ibrac] not in ops.reg_operators:
-                     ssum = ssum[0:ibrac ] + "*" + ssum[ibrac:len(ssum)]
+            if k == ")":
+                ipos1 = ops().find_nth(ssum,"(", ops.op_count[0])
+                ipos2 = ssum.index(k)
+                stemp = ssum[ipos1+1: ipos2]
+                stemp = str(ops().numloop(stemp))
+                if ipos1 != 0 and ipos2!= len(ssum)-1:
+                    if (ssum[ipos1 - 1] in ops.reg_operators):
+                            ssum = ssum[0:ipos1] + stemp + ssum[ipos2+1:len(ssum)]
+                    if (ssum[ipos1 - 1] not in ops.reg_operators):
+                        ssum = ssum[0:ipos1] + '*'  + stemp  +ssum[ipos2+1:len(ssum)]
+                else:
+                    if (ipos1 == 0) and (ipos2==len(ssum)-1):
+                       ssum =  stemp
+                    elif(ipos1!=0) and (ipos2==len(ssum)-1):
+                         if(ssum[ipos1-1] not in ops.reg_operators):
+                                ssum = ssum[0:ipos1] + '*' + stemp
+                         else: 
+                             ssum = ssum[0:ipos1]  + stemp
+                    elif(ipos1==0)and(ipos2!=len(ssum)-1):
+                            ssum = stemp + ssum[ipos2+1:len(ssum)]
+
                 ops.op_count[0] = ops.op_count[0] -1
-                if (ops.op_count[0]==0) and (ipos1!=-1):
-                    ipos2 = ssum.index(k)
-                    #add if statement to check if the reg_ops are berfore or after the brackets so that we can have a *
-                    stemp=ssum[ipos1 : ipos2 +1]
-                    ssum.replace(ssum[ipos1: ipos2 + 1], inop(ssum[ipos1+1:ipos2]))
         return eval(ssum)
-sdata = input("enter your equation: ")
-sdata = str(sdata).replace(" ", "")
+sdata = input("enter your equation: ") #getting the equation from user
+sdata = str(sdata).replace(" ", "")#removing any white space
 sdata = ops().numloop(sdata)
-print(str(sdata))
+print(str(sdata))#printing solution
